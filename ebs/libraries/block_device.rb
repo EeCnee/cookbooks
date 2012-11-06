@@ -52,7 +52,18 @@ module BlockDevice
 
   def self.assemble_raid(raid_device, options)
     Chef::Log.info "Resuming existing RAID array #{raid_device} with #{options[:disks].size} disks, RAID level #{options[:raid_level]} at #{options[:mount_point]}"
-    exec_command("mdadm --assemble --verbose #{raid_device} #{options[:disks].join(' ')}") or raise "Failed to assemble the RAID array at #{raid_device}"
+    unless exec_command("mdadm --assemble --verbose #{raid_device} #{options[:disks].join(' ')}")
+      Chef::Loog.warn "As resuming existing RAID array #{raid_device} failed in the first try, the RAID array is deactivated and udev is now prevented to execute new events - temporarily"
+      exec_command("mdadm --stop --verbose #{raid_device}")
+      sleep 5
+      exec_command("udevadm control --stop-exec-queue")
+      sleep 5
+      run_result_mdadm = exec_command("mdadm --assemble --verbose #{raid_device} #{options[:disks].join(' ')}")
+      exec_command("udevadm control --start-exec-queue")
+      unless run_result_mdadm
+        raise "Failed to assemble the RAID array at #{raid_device}"
+      end
+    end
   end
 
   def self.create_raid(raid_device, options)
