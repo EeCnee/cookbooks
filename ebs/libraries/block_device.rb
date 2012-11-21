@@ -12,7 +12,9 @@ module BlockDevice
   end
 
   def self.wait_for_logical_volumes
+    max_retries = 10
     loop do
+      max_retries -= 1
       lvscan = `lvscan`
       if lvscan.lines.all?{|line| line.include?('ACTIVE')}
         Chef::Log.debug("All LVM volume disks seem to be active:\n#{lvscan}")
@@ -21,6 +23,7 @@ module BlockDevice
         Chef::Log.debug("Not all LVM volume disks seem to be active, waiting 10 more seconds:\n#{lvscan}")
         sleep 10
       end
+      break if max_retries <= 0
     end
   end
 
