@@ -3,8 +3,8 @@ case node['scalarium']['ruby_version']
 when '1.9.2'
   default[:ruby][:major_version] = '1.9'
   default[:ruby][:full_version] = '1.9.2'
-  set[:ruby][:patch] = 'p290'
-  set[:ruby][:pkgrelease] = '4'
+  set[:ruby][:patch] = 'p180'
+  set[:ruby][:pkgrelease] = '3'
 else
   default[:ruby][:major_version] = '1.9'
   default[:ruby][:full_version] = '1.9.3'
