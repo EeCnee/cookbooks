@@ -3,13 +3,13 @@ case node['scalarium']['ruby_version']
 when '1.9.2'
   default[:ruby][:major_version] = '1.9'
   default[:ruby][:full_version] = '1.9.2'
-  set[:ruby][:patch] = 'p180'
-  set[:ruby][:pkgrelease] = '3'
+  default[:ruby][:patch] = 'p180'
+  default[:ruby][:pkgrelease] = '3'
 else
   default[:ruby][:major_version] = '1.9'
   default[:ruby][:full_version] = '1.9.3'
-  set[:ruby][:patch] = 'p327'
-  set[:ruby][:pkgrelease] = '1'
+  default[:ruby][:patch] = 'p327'
+  default[:ruby][:pkgrelease] = '1'
 end
 
 default[:ruby][:version] = "#{node[:ruby][:full_version]}#{node[:ruby][:patch]}"
